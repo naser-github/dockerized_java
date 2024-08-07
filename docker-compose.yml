@@ -3,7 +3,7 @@ version: "3.9"
 services:
   proxy:
     image: jwilder/nginx-proxy
-    container_name: dockerize-java-proxy
+    container_name: dockerized-java-proxy
     restart: unless-stopped
     ports:
       - '8000:80'
@@ -11,16 +11,16 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
       - ./nginx/conf.d:/etc/nginx/conf.d
     networks:
-      - dockerize-java-network
+      - dockerized-java-network
 
   mysql:
     image: mysql:8.4.2
-    container_name: dockerize-java-db
+    container_name: dockerized-java-db
     restart: unless-stopped
     ports:
       - "${DB_EXPOSED_PORT:-6033}:3306"
     volumes:
-      - dockerize-java-db:/var/lib/mysql
+      - dockerized-java-db:/var/lib/mysql
     command:
       - "--mysql-native-password=ON"
       - "--sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
@@ -29,11 +29,11 @@ services:
       MYSQL_USER: dockerize_java_user
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dockerize_java_pass}
     networks:
-      - dockerize-java-network
+      - dockerized-java-network
 
-  dockerize-java:
-    image: dockerize-java
-    container_name: dockerize-java
+  dockerized-java:
+    image: dockerized-java
+    container_name: dockerized-java
     restart: unless-stopped
     stdin_open: true
     tty: true
@@ -51,11 +51,11 @@ services:
       - ~/.m2:/root/.m2
     command: bash -c "chmod +x scripts/run_local.sh && ./scripts/run_local.sh"
     networks:
-      - dockerize-java-network
+      - dockerized-java-network
 
 
 networks:
-  dockerize-java-network:
+  dockerized-java-network:
     driver: bridge
 
 volumes:
